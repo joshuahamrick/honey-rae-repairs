@@ -5,7 +5,7 @@ import { Ticket } from "./Ticket.jsx"
 import { TicketFilter } from "./TicketFilter.jsx"
 
 
-export const TicketList = () => {
+export const TicketList = ({ currentUser }) => {
 
   //variables
   const [allTickets, setAllTickets] = useState([])
@@ -13,13 +13,12 @@ export const TicketList = () => {
   const [showFilteredTickets, setFilteredTickets] = useState(allTickets)
   const [searchTerm, setSearchTerm] = useState("")
 
-//render control functions
-  useEffect(() => {
-   getAllTickets().then(ticketsArray => {
+  const getAndSetTickets = () => {
+    getAllTickets().then(ticketsArray => {
       setAllTickets(ticketsArray)
-      console.log("ticket set")
-    })
-  }, [])
+    })}
+//render control functions
+  useEffect(() => getAndSetTickets(), [])
 
   
   useEffect(() => {
@@ -47,7 +46,10 @@ export const TicketList = () => {
         <article className="tickets">
         {showFilteredTickets.map((ticketObj) => {
           return (
-            <Ticket ticket={ticketObj} key={ticketObj.id}/>
+            <Ticket ticket={ticketObj} 
+                    key={ticketObj.id} 
+                    currentUser={currentUser}
+                    getAndSetTickets={getAndSetTickets}/>
           )
         })}
 
